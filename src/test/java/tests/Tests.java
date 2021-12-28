@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 import servisec.Utilities;
 
 import java.io.*;
-import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -26,11 +25,11 @@ public class Tests {
         utilities.sendNegativeRequests();
         utilities.sendNegativeRequestNoUrl();
     }
-    @Test
+//    @Test
 //    Проверка соответствия сожержимого longURL и URL после переобразования
-    public void equalsUrls() throws IOException {
-        utilities.getContent();
-        utilities.sendRequests();
-        assertEquals(gParam, gParam2);
-    }
+//    public void equalsUrls() throws IOException {
+//        utilities.getContent();
+//        utilities.sendRequests();
+//        assertEquals(gParam, gParam2);
+//    }
 }

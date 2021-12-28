@@ -30,6 +30,9 @@ public class Utilities {
                 System.out.println(response.jsonPath().getString("result_url"));
 //          Проверяем, что сервис ответил корректно
                 assertTrue(response.jsonPath().getString("result_url").contains("https://cleanuri.com/"));
+//          Проверяем, что сгенерированные ссылки рабочие
+                response = given().header("User-Agent", "PostmanRuntime/7.28.4").
+                        when().get(response.jsonPath().getString("result_url"));
                 line = reader.readLine();
             }
         } catch (FileNotFoundException e) {
@@ -84,8 +87,7 @@ public class Utilities {
                 response = given().header("User-Agent", "PostmanRuntime/7.28.4").
                         when().get(response.jsonPath().getString("result_url"));
                 s++;
-//                System.out.println(response.getBody());
-//                System.out.println(response.statusCode());
+
                 gParam2.put(s, String.valueOf(response.getHeaders()));
                 System.out.println(String.valueOf(response.getHeaders()));
                 line = reader.readLine();
