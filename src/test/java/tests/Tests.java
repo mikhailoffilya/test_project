@@ -25,6 +25,12 @@ public class Tests {
         utilities.sendNegativeRequests();
         utilities.sendNegativeRequestNoUrl();
     }
+
+    @Test
+//    Проверка работы новых Urls
+    public void newUrlsIsWorking() throws IOException {
+        utilities.sendRequests();
+    }
 //    @Test
 //    Проверка соответствия сожержимого longURL и URL после переобразования
 //    public void equalsUrls() throws IOException {

@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static io.restassured.RestAssured.given;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class Utilities {
@@ -30,9 +31,7 @@ public class Utilities {
                 System.out.println(response.jsonPath().getString("result_url"));
 //          Проверяем, что сервис ответил корректно
                 assertTrue(response.jsonPath().getString("result_url").contains("https://cleanuri.com/"));
-//          Проверяем, что сгенерированные ссылки рабочие
-                response = given().header("User-Agent", "PostmanRuntime/7.28.4").
-                        when().get(response.jsonPath().getString("result_url"));
+                logger(response.jsonPath().getString("result_url"));
                 line = reader.readLine();
             }
         } catch (FileNotFoundException e) {
@@ -41,7 +40,7 @@ public class Utilities {
     }
 
 
-    public void sendNegativeRequests(){
+    public void sendNegativeRequests() {
         try {
 //          Считываем из файла испорченные ссылки
             File file = new File("src/test/resources/files/brokenUrls.txt");
@@ -63,39 +62,43 @@ public class Utilities {
         }
     }
 
-    public void sendNegativeRequestNoUrl(){
+    public void sendNegativeRequestNoUrl() {
 //                Отправляем запросы сервису cleanuri без указания обязательного параметра url
-                Response response = given().when().post("https://cleanuri.com/api/v1/shorten");
-                System.out.println(response.getBody().asString());
+        Response response = given().when().post("https://cleanuri.com/api/v1/shorten");
+        System.out.println(response.getBody().asString());
 //                Проверяем, что сервис ответил ошибкой
-                assertTrue(response.getBody().asString().contains("error"));
+        assertTrue(response.getBody().asString().contains("error"));
+    }
+
+    public static void logger(String input) throws IOException {
+        FileWriter fw = new FileWriter("src/test/resources/files/newUrls.txt", true);
+        fw.write(input);
+        fw.write("\n");
+        fw.close();
     }
 
     public void sendRequests() throws IOException {
 
         int s = 0;
         try {
-            File file = new File("src/test/resources/files/longUrls.txt");
+            File file = new File("src/test/resources/files/newUrls.txt");
             FileReader fr = new FileReader(file);
             BufferedReader reader = new BufferedReader(fr);
             String line = reader.readLine();
             while (line != null) {
-                Response response = given().with().
-                        formParam("url", line).
-                        when().post("https://cleanuri.com/api/v1/shorten");
-                System.out.println(response.jsonPath().getString("result_url"));
-                response = given().header("User-Agent", "PostmanRuntime/7.28.4").
-                        when().get(response.jsonPath().getString("result_url"));
+                Response response = given().header("User-Agent", "PostmanRuntime/7.28.4").
+                        when().get(line);
+                System.out.println(response.statusCode());
+                assertEquals(response.statusCode(), 200);
                 s++;
-
                 gParam2.put(s, String.valueOf(response.getHeaders()));
-                System.out.println(String.valueOf(response.getHeaders()));
                 line = reader.readLine();
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
     }
+
     public void getContent() throws IOException {
         int s = 0;
         try {
